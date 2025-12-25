@@ -1,0 +1,49 @@
+name: Build & Run Primes (JIT + NativeAOT)
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-run:
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        config: [jit, aot]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Publish
+        run: |
+          if [ "${{ matrix.config }}" == "jit" ]; then
+            dotnet publish PrimesAot.csproj -c Release -r win-x64 -o publish/jit
+          else
+            dotnet publish PrimesAot.csproj -c Release -r win-x64 -p:PublishAot=true -o publish/aot
+          fi
+
+      - name: List files
+        run: dir publish
+
+      - name: Run Primes
+        run: |
+          if [ "${{ matrix.config }}" == "jit" ]; then
+            publish\jit\PrimesAot.exe
+          else
+            publish\aot\PrimesAot.exe
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Primes-${{ matrix.config }}
+          path: publish/
