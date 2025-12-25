@@ -34,11 +34,11 @@ class Program
         Array.Fill(isPrime, true);
         isPrime[0] = isPrime[1] = false;
 
-        for (int i = 2; i * i <= Limit; i++)
+        for (int i = 3; i * i <= Limit; i += 2)
         {
             if (isPrime[i])
             {
-                for (int j = i * i; j <= Limit; j += i)
+                for (int j = i * i; j <= Limit; j += 2 * i)
                     isPrime[j] = false;
             }
         }
