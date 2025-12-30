@@ -6,7 +6,6 @@ class Program
 
     static void Main()
     {
-        new PrimesAsm().Run();
         new PrimesClasic().Run();
     }
 }
