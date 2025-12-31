@@ -6,10 +6,11 @@ public class PrimesClasic
     public void Run() {
      int passes = 0;
         var sw = Stopwatch.StartNew();
+        bool[]? lastSieve = null;
 
         while (sw.Elapsed.TotalSeconds < 5.0)
         {
-            RunSieve();
+            lastSieve = RunSieve();
             passes++;
         }
 
@@ -20,7 +21,7 @@ public class PrimesClasic
             $"Time: {sw.Elapsed.TotalSeconds:0.000}, " +
             $"Avg: {sw.Elapsed.TotalSeconds / passes:0.000000}, " +
             $"Limit: {Limit}, " +
-            $"Count: {CountPrimes()}, " +
+            $"Count: {CountPrimes(lastSieve)}, " +
             $"Valid: True"
         );
     }
@@ -43,10 +44,9 @@ public class PrimesClasic
         return isPrime;
     }
 
-    static int CountPrimes()
+    static int CountPrimes(bool[] isPrime)
     {
         int count = 0;
-        var isPrime = RunSieve();
         for (int i = 2; i <= Limit; i++)
             if (isPrime[i]) count++;
         return count;
